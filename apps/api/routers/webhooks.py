@@ -14,6 +14,7 @@ from database.schema.enums import (
     RecoveryState,
 )
 from database.schema.models import AuditLog, Customer, Payment, RecoveryAction, RecoveryCase
+from database.firestore_sync import firestore_sync
 from integrations.razorpay.service import razorpay_service
 
 logger = logging.getLogger(__name__)
@@ -101,6 +102,11 @@ async def handle_razorpay_webhook(
                 },
             )
             db.add(audit)
+            firestore_sync.sync_case({
+                "id": case.id,
+                "currentState": case.current_state,
+                "actualRecovery": case.actual_recovery,
+            })
 
     # 5. Handle Payment Failed Event (New Revenue at Risk)
     elif normalized.event_type == "payment.failed":
@@ -187,6 +193,14 @@ async def handle_razorpay_webhook(
         case_id=case_id_associated,
         db=db,
     )
+    firestore_sync.sync_webhook_event(event_id, {
+        "eventId": event_id,
+        "eventType": normalized.event_type,
+        "caseId": case_id_associated,
+        "paymentId": normalized.payment_id,
+        "paymentLinkId": normalized.payment_link_id,
+        "status": "PROCESSED",
+    })
     db.commit()
 
     return {

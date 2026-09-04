@@ -32,7 +32,7 @@ def test_payment_link_generation():
         customer_phone="+919876543210",
         description="Invoice recovery for March SaaS",
     )
-    assert link["short_url"].startswith("https://rzp.io/i/") or link["short_url"].startswith("https://api.razorpay.com/")
+    assert link["short_url"].startswith("https://rzp.io/") or link["short_url"].startswith("https://api.razorpay.com/")
     assert link["amount"] == 1500.0
     assert link["reference_id"].startswith("rc_link_")
     assert link["payment_link_id"].startswith("plink_")

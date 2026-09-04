@@ -34,6 +34,7 @@ from database.schema.models import (
     RecoveryCase,
     SystemSettings,
 )
+from database.firestore_sync import firestore_sync
 from integrations.razorpay.service import razorpay_service
 
 router = APIRouter(prefix="/api/recovery-cases", tags=["Recovery Cases"])
@@ -299,6 +300,31 @@ def analyze_recovery_case(case_id: str, db: Session = Depends(get_db)):
     db.add(audit)
     db.commit()
 
+    firestore_sync.sync_case({
+        "id": case.id,
+        "amount": case.amount,
+        "currency": case.currency,
+        "currentState": case.current_state,
+        "riskScore": case.risk_score,
+        "riskLevel": case.risk_level,
+        "recoverabilityScore": case.recoverability_score,
+        "recommendedAction": case.recommended_action,
+        "expectedRecovery": case.expected_recovery,
+    })
+    firestore_sync.sync_ai_decision(str(agent_record.id), {
+        "caseId": case.id,
+        "diagnosis": decision.diagnosis,
+        "recommendation": decision.recommended_action,
+        "confidence": decision.confidence,
+        "reasoningSummary": decision.reasoning_summary,
+    })
+    firestore_sync.sync_policy_decision(str(policy_record.id), {
+        "caseId": case.id,
+        "decision": policy_result.decision.value,
+        "reason": policy_result.reason,
+        "policyName": policy_result.policy_name,
+    })
+
     return {
         "status": "success",
         "case_id": case.id,
@@ -337,6 +363,14 @@ def approve_recovery_case(case_id: str, db: Session = Depends(get_db)):
     db.add(audit)
     db.commit()
 
+    firestore_sync.sync_human_approval(case.id, {
+        "caseId": case.id,
+        "decision": "APPROVED",
+        "operator": "Merchant Finance Admin",
+        "amount": case.amount,
+    })
+    firestore_sync.sync_case({"id": case.id, "currentState": case.current_state})
+
     return {"status": "approved", "case_id": case.id, "current_state": case.current_state}
 
 
@@ -366,6 +400,14 @@ def reject_recovery_case(case_id: str, reason: str = Query("Rejected by merchant
     )
     db.add(audit)
     db.commit()
+
+    firestore_sync.sync_human_approval(case.id, {
+        "caseId": case.id,
+        "decision": "REJECTED",
+        "operator": "Merchant Finance Admin",
+        "reason": reason,
+    })
+    firestore_sync.sync_case({"id": case.id, "currentState": case.current_state})
 
     return {"status": "rejected", "case_id": case.id, "current_state": case.current_state}
 
@@ -435,6 +477,16 @@ def execute_recovery_action(case_id: str, db: Session = Depends(get_db)):
     )
     db.add(audit)
     db.commit()
+
+    if payload.get("payment_link_id"):
+        firestore_sync.sync_payment_link(payload["payment_link_id"], {
+            "caseId": case.id,
+            "shortUrl": payload.get("short_url"),
+            "amount": case.amount,
+            "status": "created",
+            "mode": payload.get("mode", "RAZORPAY_TEST_MODE"),
+        })
+    firestore_sync.sync_case({"id": case.id, "currentState": case.current_state})
 
     return {
         "status": "executed",
@@ -512,6 +564,20 @@ def verify_recovery_outcome(case_id: str, force_success: Optional[bool] = None, 
     )
     db.add(audit)
     db.commit()
+
+    firestore_sync.sync_case({
+        "id": case.id,
+        "currentState": case.current_state,
+        "actualRecovery": case.actual_recovery,
+        "verified": is_success,
+    })
+    firestore_sync.sync_audit_event(str(audit.id), {
+        "caseId": case.id,
+        "actor": audit.actor,
+        "eventType": audit.event_type,
+        "decision": audit.decision,
+        "amount": case.actual_recovery,
+    })
 
     return {
         "status": "verified",

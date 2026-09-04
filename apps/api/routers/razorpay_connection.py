@@ -50,6 +50,21 @@ def test_connection(db: Session = Depends(get_db)):
     return result
 
 
+@router.post("/sync")
+def sync_all(db: Session = Depends(get_db)):
+    """Unified synchronization of payments and links from Razorpay Test Mode."""
+    payments_res = sync_payments(db)
+    links_res = sync_payment_links(db)
+    return {
+        "status": "success",
+        "synced_payments": payments_res.get("synced_count", 0),
+        "new_cases_created": payments_res.get("new_cases_created", 0),
+        "synced_links": links_res.get("synced_count", 0),
+        "mode": payments_res.get("mode", "RAZORPAY_TEST_MODE"),
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+
 @router.post("/sync/payments")
 def sync_payments(db: Session = Depends(get_db)):
     """
