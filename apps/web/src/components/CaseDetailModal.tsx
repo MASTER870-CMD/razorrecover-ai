@@ -35,6 +35,19 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
 
+  // Escape key close handler MUST run unconditionally at top level
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    if (caseData) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [caseData, onClose]);
+
   if (!caseData) return null;
 
   const {
@@ -68,19 +81,6 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
       setTimeout(() => setCopied(false), 2000);
     }
   };
-
-  // Escape key close handler
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-    if (caseData) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [caseData, onClose]);
 
   const caseReference = c?.id ? `RC-${c.id.slice(0, 8).toUpperCase()}` : "RC-CASE";
 

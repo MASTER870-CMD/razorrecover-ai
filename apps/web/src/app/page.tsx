@@ -16,6 +16,7 @@ import { PaymentsView } from "../components/PaymentsView";
 import { AuditView } from "../components/AuditView";
 import { SettingsView } from "../components/SettingsView";
 import { RazorpayConnectionView } from "../components/RazorpayConnectionView";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 import { api } from "../lib/api";
 import { Zap, AlertTriangle, ShieldCheck } from "lucide-react";
 
@@ -284,15 +285,22 @@ export default function DashboardPage() {
       </div>
 
       {/* Case Detail Interactive Modal */}
-      <CaseDetailModal
-        caseData={selectedCaseDetail}
-        onClose={() => setSelectedCaseDetail(null)}
-        onAnalyze={handleAnalyzeCase}
-        onApprove={handleApproveCase}
-        onReject={handleRejectCase}
-        onExecute={handleExecuteCase}
-        onVerify={handleVerifyCase}
-      />
+      {selectedCaseDetail && (
+        <ErrorBoundary
+          fallbackTitle="Unable to display case details"
+          fallbackMessage="An unexpected issue occurred while rendering this case. You can close this and continue navigating."
+        >
+          <CaseDetailModal
+            caseData={selectedCaseDetail}
+            onClose={() => setSelectedCaseDetail(null)}
+            onAnalyze={handleAnalyzeCase}
+            onApprove={handleApproveCase}
+            onReject={handleRejectCase}
+            onExecute={handleExecuteCase}
+            onVerify={handleVerifyCase}
+          />
+        </ErrorBoundary>
+      )}
 
       {/* 1-Click Interactive Demo Modal */}
       <DemoModal
