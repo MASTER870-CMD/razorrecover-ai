@@ -259,6 +259,7 @@ class SystemSettings(Base):
     human_approval_threshold = Column(Float, default=0.70)  # Confidence threshold
     recovery_window_days = Column(Integer, default=14)
     max_contact_attempts = Column(Integer, default=2)
+    retry_cooldown_minutes = Column(Integer, default=60)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 

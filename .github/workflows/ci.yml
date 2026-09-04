@@ -25,6 +25,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Setup environment file
+        run: cp .env.example .env
+
       - name: Run Pytest Suite
         env:
           PYTHONPATH: .
@@ -45,6 +48,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Setup environment file
+        run: cp .env.example apps/web/.env.local
 
       - name: Install dependencies
         working-directory: apps/web

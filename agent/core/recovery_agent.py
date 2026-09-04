@@ -37,9 +37,9 @@ class RecoveryAgent:
     using Google Gemini API with deterministic fallback.
     """
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-2.5-flash"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-flash-latest"):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
-        self.model_name = model or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        self.model_name = model or os.getenv("GEMINI_MODEL", "gemini-flash-latest")
         self._client = None
 
         if self.api_key:

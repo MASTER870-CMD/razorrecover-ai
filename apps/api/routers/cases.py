@@ -252,12 +252,12 @@ def analyze_recovery_case(case_id: str, db: Session = Depends(get_db)):
         confidence=decision.confidence,
         risk_level=RiskLevel(case.risk_level),
         attempt_count=payment.attempt_count if payment else 1,
-        max_retry_attempts=settings.max_retry_attempts if settings else 3,
-        max_automatic_amount=settings.max_automatic_amount if settings else 25000.0,
-        human_approval_threshold=settings.human_approval_threshold if settings else 0.70,
-        recovery_window_days=settings.recovery_window_days if settings else 14,
-        max_contact_attempts=settings.max_contact_attempts if settings else 2,
-        retry_cooldown_minutes=settings.retry_cooldown_minutes if settings else 60,
+        max_retry_attempts=getattr(settings, "max_retry_attempts", 3) if settings else 3,
+        max_automatic_amount=getattr(settings, "max_automatic_amount", 25000.0) if settings else 25000.0,
+        human_approval_threshold=getattr(settings, "human_approval_threshold", 0.70) if settings else 0.70,
+        recovery_window_days=getattr(settings, "recovery_window_days", 14) if settings else 14,
+        max_contact_attempts=getattr(settings, "max_contact_attempts", 2) if settings else 2,
+        retry_cooldown_minutes=getattr(settings, "retry_cooldown_minutes", 60) if settings else 60,
     )
 
     policy_record = PolicyDecision(
