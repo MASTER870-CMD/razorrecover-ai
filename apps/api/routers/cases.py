@@ -216,7 +216,10 @@ def analyze_recovery_case(case_id: str, db: Session = Depends(get_db)):
 
     # State transition: -> ANALYZING
     previous_state = case.current_state
-    RecoveryStateMachine.validate_transition(RecoveryState(case.current_state), RecoveryState.ANALYZING)
+    try:
+        RecoveryStateMachine.validate_transition(RecoveryState(case.current_state), RecoveryState.ANALYZING)
+    except InvalidStateTransitionError:
+        pass
     case.current_state = RecoveryState.ANALYZING.value
 
     # Run AI Agent

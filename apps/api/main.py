@@ -51,10 +51,11 @@ app = FastAPI(
 )
 
 # CORS configuration
-origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8000").split(",")
+origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8000,http://127.0.0.1:3000,http://127.0.0.1:8000").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,9 +64,27 @@ app.add_middleware(
 
 @app.exception_handler(InvalidStateTransitionError)
 async def state_transition_exception_handler(request: Request, exc: InvalidStateTransitionError):
+    origin = request.headers.get("origin") or "*"
     return JSONResponse(
         status_code=400,
+        headers={"Access-Control-Allow-Origin": origin},
         content={"error": "INVALID_STATE_TRANSITION", "message": str(exc)},
+    )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.exception(f"Unhandled server exception on {request.url}: {exc}")
+    origin = request.headers.get("origin") or "*"
+    return JSONResponse(
+        status_code=500,
+        headers={
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
+        content={"error": "INTERNAL_SERVER_ERROR", "message": str(exc), "detail": str(exc)},
     )
 
 

@@ -21,6 +21,7 @@ class RecoveryStateMachine:
             RecoveryState.EXPIRED,
         },
         RecoveryState.ANALYZING: {
+            RecoveryState.ANALYZING,
             RecoveryState.RECOMMENDED,
             RecoveryState.FAILED,
             RecoveryState.STOPPED,
@@ -36,11 +37,13 @@ class RecoveryStateMachine:
             RecoveryState.STOPPED,
         },
         RecoveryState.PENDING_APPROVAL: {
+            RecoveryState.ANALYZING,
             RecoveryState.APPROVED,
             RecoveryState.BLOCKED,
             RecoveryState.STOPPED,
         },
         RecoveryState.APPROVED: {
+            RecoveryState.ANALYZING,
             RecoveryState.EXECUTING,
             RecoveryState.STOPPED,
         },
@@ -54,7 +57,9 @@ class RecoveryStateMachine:
             RecoveryState.STOPPED,
         },
         RecoveryState.RECOVERED: set(),  # Terminal success state
-        RecoveryState.BLOCKED: set(),    # Terminal policy block state
+        RecoveryState.BLOCKED: {
+            RecoveryState.ANALYZING,
+        },
         RecoveryState.FAILED: {
             RecoveryState.ANALYZING,      # Can re-analyze for another strategy if retries remaining
             RecoveryState.STOPPED,

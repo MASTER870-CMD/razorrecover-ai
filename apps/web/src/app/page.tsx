@@ -26,6 +26,7 @@ export default function DashboardPage() {
   const [cases, setCases] = useState<any[]>([]);
   const [selectedCaseDetail, setSelectedCaseDetail] = useState<any>(null);
   const [isDemoOpen, setIsDemoOpen] = useState<boolean>(false);
+  const [analyzingCaseId, setAnalyzingCaseId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [paymentMode, setPaymentMode] = useState<string>("SIMULATOR MODE");
 
@@ -65,6 +66,8 @@ export default function DashboardPage() {
   };
 
   const handleAnalyzeCase = async (caseId: string) => {
+    if (analyzingCaseId) return;
+    setAnalyzingCaseId(caseId);
     try {
       await api.analyzeCase(caseId);
       await loadData();
@@ -73,6 +76,8 @@ export default function DashboardPage() {
       }
     } catch (err) {
       console.error("Analysis failed:", err);
+    } finally {
+      setAnalyzingCaseId(null);
     }
   };
 
@@ -199,6 +204,7 @@ export default function DashboardPage() {
               />
               <RecoveryQueue
                 cases={cases}
+                analyzingCaseId={analyzingCaseId}
                 onSelectCase={handleSelectCase}
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
@@ -221,6 +227,7 @@ export default function DashboardPage() {
               </div>
               <RecoveryQueue
                 cases={cases}
+                analyzingCaseId={analyzingCaseId}
                 onSelectCase={handleSelectCase}
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
@@ -240,6 +247,7 @@ export default function DashboardPage() {
               </div>
               <RecoveryQueue
                 cases={cases}
+                analyzingCaseId={analyzingCaseId}
                 onSelectCase={handleSelectCase}
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
@@ -292,6 +300,7 @@ export default function DashboardPage() {
         >
           <CaseDetailModal
             caseData={selectedCaseDetail}
+            analyzingCaseId={analyzingCaseId}
             onClose={() => setSelectedCaseDetail(null)}
             onAnalyze={handleAnalyzeCase}
             onApprove={handleApproveCase}

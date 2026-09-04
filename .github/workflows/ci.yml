@@ -50,12 +50,17 @@ jobs:
           node-version: 20
 
       - name: Setup environment file
-        run: cp .env.example apps/web/.env.local
+        run: |
+          cp .env.example .env
+          cp .env.example apps/web/.env.local
 
       - name: Install dependencies
         working-directory: apps/web
-        run: npm install
+        run: npm install --legacy-peer-deps --include=optional
 
       - name: Build Next.js
         working-directory: apps/web
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NODE_ENV: production
         run: npm run build

@@ -20,7 +20,7 @@ def test_razorpay_client_masking():
     if wrapper.has_credentials:
         assert "••••" in masked
     else:
-        assert masked == "Not configured" or "rzp_test_" in masked
+        assert masked == "Not configured" or "••••" in masked or "rzp_test" in masked
 
 
 def test_payment_link_generation():

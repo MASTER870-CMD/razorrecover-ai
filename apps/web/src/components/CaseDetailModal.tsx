@@ -12,10 +12,12 @@ import {
   Check,
   Lock,
   Zap,
+  Loader2,
 } from "lucide-react";
 
 interface CaseDetailModalProps {
   caseData: any;
+  analyzingCaseId?: string | null;
   onClose: () => void;
   onAnalyze: (id: string) => void;
   onApprove: (id: string) => void;
@@ -26,6 +28,7 @@ interface CaseDetailModalProps {
 
 export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
   caseData,
+  analyzingCaseId,
   onClose,
   onAnalyze,
   onApprove,
@@ -376,9 +379,17 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
             {c?.current_state === "AT_RISK" && (
               <button
                 onClick={() => onAnalyze(c.id)}
-                className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition shadow-sm"
+                disabled={analyzingCaseId === c.id}
+                className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Analyze with AI Agent
+                {analyzingCaseId === c.id ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>AI Agent Analyzing...</span>
+                  </>
+                ) : (
+                  "Analyze with AI Agent"
+                )}
               </button>
             )}
             {c?.current_state === "PENDING_APPROVAL" && (

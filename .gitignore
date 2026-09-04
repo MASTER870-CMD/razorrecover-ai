@@ -43,10 +43,12 @@ postgres_data/
 
 # Environment
 .env
+.env.test
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.tsbuildinfo
 
 # IDE & OS
 .vscode/
