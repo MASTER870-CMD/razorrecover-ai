@@ -65,4 +65,4 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
-          npm run build
+          npm run build 2>&1 | tee build.log || (echo "### Next.js Build Failure Log" >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && cat build.log >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && exit 1)

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Sliders, Save, CheckCircle2, ShieldCheck } from "lucide-react";
 import { api } from "../lib/api";

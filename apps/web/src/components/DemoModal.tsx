@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Zap, CheckCircle2, ShieldCheck, X, RefreshCw } from "lucide-react";
 import { api } from "../lib/api";

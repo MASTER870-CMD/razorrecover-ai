@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Search, Eye, Loader2 } from "lucide-react";
 

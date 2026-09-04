@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { AlertTriangle, CheckCircle, TrendingUp, Clock, UserCheck, ShieldX } from "lucide-react";
 

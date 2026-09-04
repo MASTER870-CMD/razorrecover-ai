@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FlaskConical, TrendingUp, CheckCircle, BarChart3 } from "lucide-react";
 

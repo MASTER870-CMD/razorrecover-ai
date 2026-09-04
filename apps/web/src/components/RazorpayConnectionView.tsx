@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { Plug, RefreshCw, CheckCircle2, AlertCircle, ShieldCheck, KeyRound, ExternalLink, ArrowRight } from "lucide-react";
 import { api } from "../lib/api";
