@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: razorrecover-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: razor_user
+      POSTGRES_PASSWORD: razor_password
+      POSTGRES_DB: razorrecover_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U razor_user -d razorrecover_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.api
+    container_name: razorrecover-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://razor_user:razor_password@postgres:5432/razorrecover_ai
+      - APP_ENV=development
+      - PAYMENT_MODE=simulator
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-}
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.web
+    container_name: razorrecover-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_PAYMENT_MODE=simulator
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
