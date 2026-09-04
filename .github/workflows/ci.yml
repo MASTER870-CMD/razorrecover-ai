@@ -56,12 +56,13 @@ jobs:
 
       - name: Install dependencies
         working-directory: apps/web
-        run: npm install --legacy-peer-deps --include=optional
+        run: |
+          npm install --legacy-peer-deps
+          npm install --no-save @next/swc-linux-x64-gnu@14.2.35 @next/swc-wasm-nodejs@14.2.35 || true
 
       - name: Build Next.js
         working-directory: apps/web
         env:
           NEXT_TELEMETRY_DISABLED: 1
-          NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
-        run: npm run build
+        run: |
+          npx next build
