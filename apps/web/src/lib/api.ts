@@ -1,4 +1,6 @@
-const API_BASE = typeof window !== "undefined" ? "" : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000");
+const isProd = process.env.NODE_ENV === 'production';
+const defaultServerUrl = isProd ? 'https://razorrecover-api.onrender.com' : 'http://localhost:8000';
+const API_BASE = typeof window !== "undefined" ? "" : (process.env.NEXT_PUBLIC_API_URL || defaultServerUrl);
 
 export async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}${endpoint}`;

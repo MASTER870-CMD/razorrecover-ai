@@ -122,6 +122,11 @@ def get_dashboard_summary(db: Session = Depends(get_db)):
     conn_status = razorpay_service.get_connection_status()
     sync_record = db.query(RazorpaySyncStatus).filter_by(id="default").first()
 
+    # Determine the correct sync time to display
+    sync_time_str = now.isoformat() + "Z"
+    if sync_record and sync_record.last_sync_at:
+        sync_time_str = sync_record.last_sync_at.isoformat() + "Z"
+
     return DashboardSummaryResponse(
         revenue_at_risk=round(total_risk, 2),
         revenue_recovered=round(total_recovered, 2),
@@ -136,5 +141,5 @@ def get_dashboard_summary(db: Session = Depends(get_db)):
         recovery_action_breakdown=recovery_action_breakdown,
         risk_level_breakdown=risk_level_breakdown,
         data_source=conn_status.get("mode", "LOCAL_SIMULATION"),
-        last_sync_at=sync_record.last_sync_at.isoformat() if (sync_record and sync_record.last_sync_at) else None,
+        last_sync_at=sync_time_str,
     )
