@@ -103,23 +103,23 @@ RazorRecover AI implements the official recovery mechanism supported by Razorpay
 
 ```mermaid
 flowchart TD
-    A[Razorpay Test Mode] -->|Webhook POST /api/webhooks/razorpay| B[FastAPI Webhook Processor]
-    B -->|HMAC-SHA256 & Idempotency| C[State Machine & Event Ingestion]
-    C -->|Persist Document| D[(Firebase Firestore: razorrecover-ai-88f4c)]
+    A["Razorpay Test Mode"] -->|"Webhook POST /api/webhooks/razorpay"| B["FastAPI Webhook Processor"]
+    B -->|"HMAC-SHA256 & Idempotency"| C["State Machine & Event Ingestion"]
+    C -->|"Persist Document"| D[("Firebase Firestore: razorrecover-ai-88f4c")]
     
-    C --> E[Revenue Risk Engine (Deterministic)]
-    E --> F[Gemini AI Reasoning Layer]
-    F --> G[Deterministic Policy Guardrails]
+    C --> E["Revenue Risk Engine (Deterministic)"]
+    E --> F["Gemini AI Reasoning Layer"]
+    F --> G["Deterministic Policy Guardrails"]
     
-    G -->|Pass| H[Razorpay Payment Link API]
-    G -->|Trigger Threshold| I[Human Approval Queue]
-    G -->|Breach| J[Blocked & Audited]
+    G -->|"Pass"| H["Razorpay Payment Link API"]
+    G -->|"Trigger Threshold"| I["Human Approval Queue"]
+    G -->|"Breach"| J["Blocked & Audited"]
     
-    I -->|Operator Approves| H
-    H -->|Real Test Link https://rzp.io/...| K[Customer Checkout]
-    K -->|Payment Success Webhook| B
-    B -->|Verified| L[Mark Case RECOVERED in Firestore]
-    L --> M[Update Live Financial Dashboard]
+    I -->|"Operator Approves"| H
+    H -->|"Razorpay Payment Link"| K["Customer Checkout"]
+    K -->|"Payment Success Webhook"| B
+    B -->|"Verified"| L["Mark Case RECOVERED in Firestore"]
+    L --> M["Update Live Financial Dashboard"]
 ```
 
 ### Firestore Collections

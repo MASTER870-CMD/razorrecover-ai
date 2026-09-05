@@ -161,7 +161,7 @@ class SimulatorDataGenerator:
             recoverability_score=assessment.recoverability_score,
             expected_recovery=assessment.expected_recovery,
             actual_recovery=0.0,
-            recommended_action=scenario.ground_truth_optimal_action,
+            recommended_action=None,
             current_state=RecoveryState.AT_RISK.value,
             scenario_type=scenario_key,
         )

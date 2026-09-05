@@ -232,6 +232,7 @@ export default function DashboardPage() {
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
                 onExecuteCase={handleExecuteCase}
+                onVerifyCase={handleVerifyCase}
               />
             </>
           )}
@@ -258,6 +259,7 @@ export default function DashboardPage() {
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
                 onExecuteCase={handleExecuteCase}
+                onVerifyCase={handleVerifyCase}
               />
             </div>
           )}
@@ -281,6 +283,7 @@ export default function DashboardPage() {
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
                 onExecuteCase={handleExecuteCase}
+                onVerifyCase={handleVerifyCase}
               />
             </div>
           )}
