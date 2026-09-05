@@ -27,6 +27,8 @@ export default function DashboardPage() {
   const [selectedCaseDetail, setSelectedCaseDetail] = useState<any>(null);
   const [isDemoOpen, setIsDemoOpen] = useState<boolean>(false);
   const [analyzingCaseId, setAnalyzingCaseId] = useState<string | null>(null);
+  const [executingCaseId, setExecutingCaseId] = useState<string | null>(null);
+  const [verifyingCaseId, setVerifyingCaseId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [paymentMode, setPaymentMode] = useState<string>("SIMULATOR MODE");
 
@@ -106,6 +108,8 @@ export default function DashboardPage() {
   };
 
   const handleExecuteCase = async (caseId: string) => {
+    if (executingCaseId) return;
+    setExecutingCaseId(caseId);
     try {
       await api.executeCase(caseId);
       await loadData();
@@ -114,10 +118,14 @@ export default function DashboardPage() {
       }
     } catch (err) {
       console.error("Execution failed:", err);
+    } finally {
+      setExecutingCaseId(null);
     }
   };
 
   const handleVerifyCase = async (caseId: string) => {
+    if (verifyingCaseId) return;
+    setVerifyingCaseId(caseId);
     try {
       await api.verifyCase(caseId);
       await loadData();
@@ -126,6 +134,8 @@ export default function DashboardPage() {
       }
     } catch (err) {
       console.error("Verification failed:", err);
+    } finally {
+      setVerifyingCaseId(null);
     }
   };
 
@@ -205,6 +215,8 @@ export default function DashboardPage() {
               <RecoveryQueue
                 cases={cases}
                 analyzingCaseId={analyzingCaseId}
+                executingCaseId={executingCaseId}
+                verifyingCaseId={verifyingCaseId}
                 onSelectCase={handleSelectCase}
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
@@ -228,6 +240,8 @@ export default function DashboardPage() {
               <RecoveryQueue
                 cases={cases}
                 analyzingCaseId={analyzingCaseId}
+                executingCaseId={executingCaseId}
+                verifyingCaseId={verifyingCaseId}
                 onSelectCase={handleSelectCase}
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
@@ -248,6 +262,8 @@ export default function DashboardPage() {
               <RecoveryQueue
                 cases={cases}
                 analyzingCaseId={analyzingCaseId}
+                executingCaseId={executingCaseId}
+                verifyingCaseId={verifyingCaseId}
                 onSelectCase={handleSelectCase}
                 onAnalyzeCase={handleAnalyzeCase}
                 onApproveCase={handleApproveCase}
@@ -301,6 +317,8 @@ export default function DashboardPage() {
           <CaseDetailModal
             caseData={selectedCaseDetail}
             analyzingCaseId={analyzingCaseId}
+            executingCaseId={executingCaseId}
+            verifyingCaseId={verifyingCaseId}
             onClose={() => setSelectedCaseDetail(null)}
             onAnalyze={handleAnalyzeCase}
             onApprove={handleApproveCase}

@@ -23,6 +23,8 @@ interface CaseItem {
 interface RecoveryQueueProps {
   cases: CaseItem[];
   analyzingCaseId?: string | null;
+  executingCaseId?: string | null;
+  verifyingCaseId?: string | null;
   onSelectCase: (caseId: string) => void;
   onAnalyzeCase: (caseId: string) => void;
   onApproveCase: (caseId: string) => void;
@@ -32,6 +34,8 @@ interface RecoveryQueueProps {
 export const RecoveryQueue: React.FC<RecoveryQueueProps> = ({
   cases,
   analyzingCaseId,
+  executingCaseId,
+  verifyingCaseId,
   onSelectCase,
   onAnalyzeCase,
   onApproveCase,
@@ -225,9 +229,17 @@ export const RecoveryQueue: React.FC<RecoveryQueueProps> = ({
                     {c.current_state === "APPROVED" && (
                       <button
                         onClick={() => onExecuteCase(c.id)}
-                        className="px-2.5 py-1 text-[11px] font-semibold rounded bg-brand-600 text-white hover:bg-brand-700 transition shadow-sm"
+                        disabled={executingCaseId === c.id}
+                        className="px-2.5 py-1 text-[11px] font-semibold rounded bg-brand-600 text-white hover:bg-brand-700 transition shadow-sm flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
                       >
-                        Create Link
+                        {executingCaseId === c.id ? (
+                          <>
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <span>Creating...</span>
+                          </>
+                        ) : (
+                          "Create Link"
+                        )}
                       </button>
                     )}
                     <button

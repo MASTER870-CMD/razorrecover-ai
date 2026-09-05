@@ -20,6 +20,8 @@ import {
 interface CaseDetailModalProps {
   caseData: any;
   analyzingCaseId?: string | null;
+  executingCaseId?: string | null;
+  verifyingCaseId?: string | null;
   onClose: () => void;
   onAnalyze: (id: string) => void;
   onApprove: (id: string) => void;
@@ -31,6 +33,8 @@ interface CaseDetailModalProps {
 export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
   caseData,
   analyzingCaseId,
+  executingCaseId,
+  verifyingCaseId,
   onClose,
   onAnalyze,
   onApprove,
@@ -305,9 +309,17 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
                 {c?.current_state === "APPROVED" && (
                   <button
                     onClick={() => onExecute(c.id)}
-                    className="px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition shadow-sm"
+                    disabled={executingCaseId === c?.id}
+                    className="px-3.5 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition shadow-sm flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Create Payment Link Now
+                    {executingCaseId === c?.id ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Creating Link...</span>
+                      </>
+                    ) : (
+                      "Create Payment Link Now"
+                    )}
                   </button>
                 )}
               </div>
@@ -343,9 +355,17 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
                 {(c?.current_state === "WAITING_FOR_PAYMENT" || c?.current_state === "EXECUTING" || c?.current_state === "APPROVED") && (
                   <button
                     onClick={() => onVerify(c.id)}
-                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm"
+                    disabled={verifyingCaseId === c?.id || executingCaseId === c?.id}
+                    className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Verify Test Payment
+                    {verifyingCaseId === c?.id ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Verifying...</span>
+                      </>
+                    ) : (
+                      "Verify Test Payment"
+                    )}
                   </button>
                 )}
               </div>
@@ -413,17 +433,33 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
             {c?.current_state === "APPROVED" && (
               <button
                 onClick={() => onExecute(c.id)}
-                className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition shadow-sm"
+                disabled={executingCaseId === c?.id}
+                className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Create Payment Link
+                {executingCaseId === c?.id ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Creating Link...</span>
+                  </>
+                ) : (
+                  "Create Payment Link"
+                )}
               </button>
             )}
             {(c?.current_state === "WAITING_FOR_PAYMENT" || c?.current_state === "EXECUTING") && (
               <button
                 onClick={() => onVerify(c.id)}
-                className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm"
+                disabled={verifyingCaseId === c?.id || executingCaseId === c?.id}
+                className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Verify Payment
+                {verifyingCaseId === c?.id ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Verifying...</span>
+                  </>
+                ) : (
+                  "Verify Payment"
+                )}
               </button>
             )}
             <button

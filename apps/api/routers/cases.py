@@ -421,6 +421,34 @@ def execute_recovery_action(case_id: str, db: Session = Depends(get_db)):
     if not case:
         raise HTTPException(status_code=404, detail="Recovery case not found")
 
+    # Idempotent handling: If already executing, waiting for payment, or recovered, return existing record cleanly
+    if case.current_state in {RecoveryState.EXECUTING.value, RecoveryState.VERIFYING.value, "WAITING_FOR_PAYMENT"}:
+        existing_action = (
+            db.query(RecoveryAction)
+            .filter(RecoveryAction.case_id == case.id)
+            .order_by(RecoveryAction.executed_at.desc())
+            .first()
+        )
+        ref = existing_action.external_reference if existing_action else ""
+        payload = existing_action.payload if existing_action and isinstance(existing_action.payload, dict) else {}
+        return {
+            "status": "already_executed",
+            "case_id": case.id,
+            "current_state": case.current_state,
+            "action_type": case.recommended_action or "PAYMENT_LINK",
+            "reference": ref,
+            "payment_link_url": payload.get("short_url"),
+            "mode": payload.get("mode", "LOCAL_SIMULATION"),
+        }
+
+    if case.current_state == RecoveryState.RECOVERED.value:
+        return {
+            "status": "already_recovered",
+            "case_id": case.id,
+            "current_state": "RECOVERED",
+            "actual_recovery": case.actual_recovery,
+        }
+
     if case.current_state != RecoveryState.APPROVED.value:
         raise HTTPException(status_code=400, detail=f"Cannot execute action for case in state {case.current_state}. Case must be APPROVED.")
 
@@ -508,11 +536,22 @@ def verify_recovery_outcome(case_id: str, force_success: Optional[bool] = None, 
     if not case:
         raise HTTPException(status_code=404, detail="Recovery case not found")
 
-    if case.current_state != RecoveryState.EXECUTING.value:
-        raise HTTPException(status_code=400, detail=f"Cannot verify case in state {case.current_state}. Case must be EXECUTING.")
+    # Idempotent check: if already recovered, return success immediately
+    if case.current_state == RecoveryState.RECOVERED.value:
+        return {
+            "status": "already_recovered",
+            "case_id": case.id,
+            "current_state": "RECOVERED",
+            "recovered": True,
+            "actual_recovery": case.actual_recovery or case.amount,
+        }
+
+    # If case was in APPROVED state when verify was clicked, execute action first
+    if case.current_state == RecoveryState.APPROVED.value:
+        execute_recovery_action(case_id, db)
+        case = db.query(RecoveryCase).filter(RecoveryCase.id == case_id).first()
 
     previous_state = case.current_state
-    RecoveryStateMachine.validate_transition(RecoveryState.EXECUTING, RecoveryState.VERIFYING)
     case.current_state = RecoveryState.VERIFYING.value
 
     # Fetch last action executed
