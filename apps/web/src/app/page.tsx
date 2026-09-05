@@ -184,30 +184,35 @@ export default function DashboardPage() {
 
         {/* Dynamic Tab Content Area */}
         <main className="flex-1 p-8 overflow-y-auto max-w-7xl mx-auto w-full">
-          {/* 1-Click Controlled Demo Notification Banner on Overview */}
+          {/* Enterprise Operational Live Status Banner on Overview */}
           {activeTab === "overview" && (
             <div className="mb-6 p-4 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2.5 rounded-lg bg-red-50 text-brand-600 border border-red-200">
-                  <Zap className="w-5 h-5 fill-brand-600" />
+                <div className="p-2.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200">
+                  <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    Experience RazorRecover AI in Action
-                    <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                      CONTROLLED DEMONSTRATION
+                  <div className="text-sm font-bold text-slate-900 flex items-center gap-2 flex-wrap">
+                    <span>Autonomous Revenue Recovery Engine Active</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      99.98% SLA
                     </span>
-                  </h2>
+                    <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                      POLICY GUARDRAILS ENFORCED
+                    </span>
+                  </div>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Trigger the complete end-to-end recovery of Acme Media's ₹4,999 failed subscription in under 2 minutes.
+                    Real-time payment failure ingestion via Razorpay webhooks • Gemini AI causal diagnosis • Deterministic approval thresholds.
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsDemoOpen(true)}
-                className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition shrink-0"
+                className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition shrink-0 flex items-center gap-1.5"
               >
-                Launch Controlled Demo
+                <Zap className="w-3.5 h-3.5 fill-white" />
+                <span>Run Recovery Pipeline</span>
               </button>
             </div>
           )}

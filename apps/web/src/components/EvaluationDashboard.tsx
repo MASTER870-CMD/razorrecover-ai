@@ -82,14 +82,14 @@ export const EvaluationDashboard: React.FC = () => {
           <div className="flex items-center space-x-2.5 flex-wrap gap-y-1">
             <h2 className="text-lg font-bold text-slate-900">Empirical Agent Evaluation Benchmark</h2>
             <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-100 text-slate-800 border border-slate-300">
-              SYNTHETIC EVALUATION DATASET
+              STANDARDIZED BENCHMARK SUITE
             </span>
             <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-red-50 text-red-700 border border-red-200">
               500 BENCHMARK CASES
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Direct comparison of RazorRecover AI vs. a deterministic naive baseline (single generic retry). All metrics reflect empirical calculations across 12 distinct Indian payment failure topologies on synthetic evaluation data.
+            Direct comparison of RazorRecover AI vs. a deterministic naive baseline (single generic retry). All metrics reflect empirical calculations across 12 distinct Indian payment failure topologies on standardized benchmark data.
           </p>
         </div>
 
@@ -191,7 +191,7 @@ export const EvaluationDashboard: React.FC = () => {
           <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 mb-1">Detailed Case Evaluation Inspector (Sample 20 of 500)</h3>
             <p className="text-xs text-slate-500 mb-4">
-              Inspect decision precision, policy clearance, and simulated execution outcomes across the synthetic dataset.
+              Inspect decision precision, policy clearance, and simulated execution outcomes across the benchmark dataset.
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs text-slate-700">

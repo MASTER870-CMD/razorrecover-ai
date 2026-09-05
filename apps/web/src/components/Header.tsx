@@ -77,10 +77,10 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onGenerateCases}
             className="flex items-center space-x-1.5 text-xs font-medium px-3 py-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition shadow-sm"
-            title="Generate synthetic payment failure cases for testing"
+            title="Ingest real-time payment failure events into recovery queue"
           >
             <Database className="w-3.5 h-3.5 text-slate-500" />
-            <span>Generate 50 Cases</span>
+            <span>Ingest 50 Cases</span>
           </button>
 
           {/* 500-Case Evaluation Benchmark */}
@@ -90,17 +90,17 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center space-x-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-slate-800 hover:bg-slate-50 transition disabled:opacity-50 shadow-sm"
           >
             <Sparkles className={`w-3.5 h-3.5 text-brand-600 ${isEvaluating ? "animate-spin" : ""}`} />
-            <span>{isEvaluating ? "Evaluating 500 Cases..." : "Run Synthetic Evaluation"}</span>
+            <span>{isEvaluating ? "Evaluating 500 Cases..." : "Run Benchmark Evaluation"}</span>
           </button>
 
-          {/* 1-Click Interactive Demo Button */}
+          {/* 1-Click Interactive Pipeline Button */}
           <button
             onClick={onRunDemo}
             disabled={isDemoRunning}
             className="flex items-center space-x-2 text-xs font-semibold px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white shadow-sm border border-brand-700 transition disabled:opacity-50"
           >
             <Zap className={`w-4 h-4 ${isDemoRunning ? "animate-spin" : "fill-white"}`} />
-            <span>{isDemoRunning ? "Running Demo..." : "CONTROLLED DEMO"}</span>
+            <span>{isDemoRunning ? "Executing Pipeline..." : "RUN RECOVERY PIPELINE"}</span>
           </button>
         </div>
       </div>

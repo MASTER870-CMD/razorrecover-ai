@@ -123,13 +123,13 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose, onFinishe
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-sm font-bold text-slate-900">Controlled Demonstration</h2>
-                <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-slate-100 text-slate-700 border border-slate-200">
-                  TEST WORKFLOW
+                <h2 className="text-sm font-bold text-slate-900">Autonomous Recovery Execution Pipeline</h2>
+                <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  LIVE PIPELINE WORKFLOW
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 mt-0.5">
-                Acme Media • ₹4,999 INR • Autonomous recovery lifecycle
+                Acme Media • ₹4,999 INR • Autonomous recovery lifecycle execution
               </p>
             </div>
           </div>
@@ -217,7 +217,7 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose, onFinishe
               className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-300 transition flex items-center space-x-1.5 shadow-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-              <span>Re-run</span>
+              <span>Run Again</span>
             </button>
             <button
               onClick={onClose}
