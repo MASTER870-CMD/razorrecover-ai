@@ -83,25 +83,69 @@ export const RecoveryQueue: React.FC<RecoveryQueueProps> = ({
   const getStateBadge = (state: string) => {
     switch (state) {
       case "RECOVERED":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">RECOVERED</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span>RECOVERED</span>
+          </span>
+        );
       case "WAITING_FOR_PAYMENT":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200 animate-pulse">WAITING FOR PAYMENT</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-amber-50 text-amber-700 border border-amber-200 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            <span>WAITING FOR PAYMENT</span>
+          </span>
+        );
       case "APPROVED":
       case "READY":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-blue-50 text-blue-700 border border-blue-200">READY</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+            <span>READY</span>
+          </span>
+        );
       case "PENDING_APPROVAL":
       case "PENDING_REVIEW":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 border border-amber-300">PENDING REVIEW</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-amber-50 text-amber-800 border border-amber-300 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            <span>PENDING REVIEW</span>
+          </span>
+        );
       case "BLOCKED":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-slate-100 text-slate-700 border border-slate-300">BLOCKED</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-slate-100 text-slate-700 border border-slate-300 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+            <span>BLOCKED</span>
+          </span>
+        );
       case "EXECUTING":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-slate-100 text-slate-800 border border-slate-300">EXECUTING</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <span>EXECUTING</span>
+          </span>
+        );
       case "AT_RISK":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-red-50 text-red-700 border border-red-200">AT RISK</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-red-50 text-red-700 border border-red-200 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+            <span>AT RISK</span>
+          </span>
+        );
       case "FAILED":
-        return <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-red-100 text-red-800 border border-red-300">FAILED</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold rounded-md bg-red-100 text-red-800 border border-red-300 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
+            <span>FAILED</span>
+          </span>
+        );
       default:
-        return <span className="px-2.5 py-0.5 text-[10px] font-medium rounded-full bg-slate-100 text-slate-700 border border-slate-200">{state?.replace(/_/g, " ")}</span>;
+        return (
+          <span className="whitespace-nowrap inline-flex items-center px-2.5 py-1 text-[10px] font-medium rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+            {state?.replace(/_/g, " ")}
+          </span>
+        );
     }
   };
 
@@ -165,9 +209,9 @@ export const RecoveryQueue: React.FC<RecoveryQueueProps> = ({
               <th className="py-3 px-3">Failure Reason</th>
               <th className="py-3 px-3">Risk</th>
               <th className="py-3 px-3">Recoverability</th>
-              <th className="py-3 px-3">AI Recommendation</th>
-              <th className="py-3 px-3">Status</th>
-              <th className="py-3 px-3 text-right">Action</th>
+              <th className="py-3 px-3 whitespace-nowrap">AI Recommendation</th>
+              <th className="py-3 px-3 whitespace-nowrap">Status</th>
+              <th className="py-3 px-3 text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -211,8 +255,8 @@ export const RecoveryQueue: React.FC<RecoveryQueueProps> = ({
                     <span className="text-slate-400 italic text-[11px]">—</span>
                   )}
                 </td>
-                <td className="py-3 px-3">{getStateBadge(c.current_state)}</td>
-                <td className="py-3 px-3 text-right" onClick={(e) => e.stopPropagation()}>
+                <td className="py-3 px-3 whitespace-nowrap">{getStateBadge(c.current_state)}</td>
+                <td className="py-3 px-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-end space-x-1.5">
                     {c.current_state === "AT_RISK" && (
                       <button
@@ -234,7 +278,7 @@ export const RecoveryQueue: React.FC<RecoveryQueueProps> = ({
                       <button
                         onClick={() => onApproveCase(c.id)}
                         disabled={approvingCaseId === c.id}
-                        className="px-2.5 py-1 text-[11px] font-medium rounded bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300 transition flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="px-3 py-1 text-[11px] font-semibold rounded-md bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
                       >
                         {approvingCaseId === c.id ? (
                           <>
