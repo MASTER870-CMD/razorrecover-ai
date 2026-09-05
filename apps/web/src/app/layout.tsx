@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "RazorRecover AI — Find Revenue at Risk. Recover it Safely.",
   description:
     "Autonomous revenue recovery infrastructure for Razorpay merchants. Built for Razorpay AI Buildathon 2026 Track 03.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

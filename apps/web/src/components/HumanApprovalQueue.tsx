@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, X, UserCheck, ArrowUpRight } from "lucide-react";
+import { Check, X, UserCheck, ArrowUpRight, Loader2 } from "lucide-react";
 
 interface ApprovalCase {
   id: string;
@@ -18,6 +18,8 @@ interface ApprovalCase {
 
 interface HumanApprovalQueueProps {
   cases: ApprovalCase[];
+  approvingCaseId?: string | null;
+  rejectingCaseId?: string | null;
   onApprove: (caseId: string) => void;
   onReject: (caseId: string) => void;
   onSelectCase: (caseId: string) => void;
@@ -25,6 +27,8 @@ interface HumanApprovalQueueProps {
 
 export const HumanApprovalQueue: React.FC<HumanApprovalQueueProps> = ({
   cases,
+  approvingCaseId,
+  rejectingCaseId,
   onApprove,
   onReject,
   onSelectCase,
@@ -106,17 +110,37 @@ export const HumanApprovalQueue: React.FC<HumanApprovalQueueProps> = ({
               <div className="flex items-center space-x-2 pt-3 border-t border-slate-100">
                 <button
                   onClick={() => onApprove(c.id)}
-                  className="flex-1 flex items-center justify-center space-x-1.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm"
+                  disabled={approvingCaseId === c.id || rejectingCaseId === c.id}
+                  className="flex-1 flex items-center justify-center space-x-1.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Check className="w-3.5 h-3.5" />
-                  <span>APPROVE</span>
+                  {approvingCaseId === c.id ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>APPROVING...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>APPROVE</span>
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() => onReject(c.id)}
-                  className="flex-1 flex items-center justify-center space-x-1.5 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition"
+                  disabled={approvingCaseId === c.id || rejectingCaseId === c.id}
+                  className="flex-1 flex items-center justify-center space-x-1.5 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <X className="w-3.5 h-3.5" />
-                  <span>REJECT</span>
+                  {rejectingCaseId === c.id ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>REJECTING...</span>
+                    </>
+                  ) : (
+                    <>
+                      <X className="w-3.5 h-3.5" />
+                      <span>REJECT</span>
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={() => onSelectCase(c.id)}

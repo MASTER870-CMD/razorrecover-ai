@@ -20,6 +20,8 @@ import {
 interface CaseDetailModalProps {
   caseData: any;
   analyzingCaseId?: string | null;
+  approvingCaseId?: string | null;
+  rejectingCaseId?: string | null;
   executingCaseId?: string | null;
   verifyingCaseId?: string | null;
   onClose: () => void;
@@ -33,6 +35,8 @@ interface CaseDetailModalProps {
 export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
   caseData,
   analyzingCaseId,
+  approvingCaseId,
+  rejectingCaseId,
   executingCaseId,
   verifyingCaseId,
   onClose,
@@ -418,15 +422,31 @@ export const CaseDetailModal: React.FC<CaseDetailModalProps> = ({
               <>
                 <button
                   onClick={() => onApprove(c.id)}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm"
+                  disabled={approvingCaseId === c?.id || rejectingCaseId === c?.id}
+                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  APPROVE
+                  {approvingCaseId === c?.id ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>APPROVING...</span>
+                    </>
+                  ) : (
+                    "APPROVE"
+                  )}
                 </button>
                 <button
                   onClick={() => onReject(c.id)}
-                  className="px-4 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition"
+                  disabled={approvingCaseId === c?.id || rejectingCaseId === c?.id}
+                  className="px-4 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  REJECT
+                  {rejectingCaseId === c?.id ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>REJECTING...</span>
+                    </>
+                  ) : (
+                    "REJECT"
+                  )}
                 </button>
               </>
             )}

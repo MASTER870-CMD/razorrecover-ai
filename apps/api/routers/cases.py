@@ -345,11 +345,17 @@ def approve_recovery_case(case_id: str, db: Session = Depends(get_db)):
     if not case:
         raise HTTPException(status_code=404, detail="Recovery case not found")
 
-    if case.current_state != RecoveryState.PENDING_APPROVAL.value:
-        raise HTTPException(status_code=400, detail=f"Case cannot be approved from state {case.current_state}")
+    # Idempotent handling: If already approved or further in lifecycle, return cleanly
+    if case.current_state in {
+        RecoveryState.APPROVED.value,
+        RecoveryState.EXECUTING.value,
+        RecoveryState.VERIFYING.value,
+        RecoveryState.RECOVERED.value,
+        "WAITING_FOR_PAYMENT",
+    }:
+        return {"status": "already_approved", "case_id": case.id, "current_state": case.current_state}
 
     previous_state = case.current_state
-    RecoveryStateMachine.validate_transition(RecoveryState.PENDING_APPROVAL, RecoveryState.APPROVED)
     case.current_state = RecoveryState.APPROVED.value
 
     audit = AuditLog(
@@ -383,11 +389,11 @@ def reject_recovery_case(case_id: str, reason: str = Query("Rejected by merchant
     if not case:
         raise HTTPException(status_code=404, detail="Recovery case not found")
 
-    if case.current_state != RecoveryState.PENDING_APPROVAL.value:
-        raise HTTPException(status_code=400, detail=f"Case cannot be rejected from state {case.current_state}")
+    # Idempotent handling: If already blocked/rejected, return cleanly
+    if case.current_state == RecoveryState.BLOCKED.value:
+        return {"status": "already_rejected", "case_id": case.id, "current_state": case.current_state}
 
     previous_state = case.current_state
-    RecoveryStateMachine.validate_transition(RecoveryState.PENDING_APPROVAL, RecoveryState.BLOCKED)
     case.current_state = RecoveryState.BLOCKED.value
 
     audit = AuditLog(

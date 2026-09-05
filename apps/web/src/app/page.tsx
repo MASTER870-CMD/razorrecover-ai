@@ -27,6 +27,8 @@ export default function DashboardPage() {
   const [selectedCaseDetail, setSelectedCaseDetail] = useState<any>(null);
   const [isDemoOpen, setIsDemoOpen] = useState<boolean>(false);
   const [analyzingCaseId, setAnalyzingCaseId] = useState<string | null>(null);
+  const [approvingCaseId, setApprovingCaseId] = useState<string | null>(null);
+  const [rejectingCaseId, setRejectingCaseId] = useState<string | null>(null);
   const [executingCaseId, setExecutingCaseId] = useState<string | null>(null);
   const [verifyingCaseId, setVerifyingCaseId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -84,6 +86,8 @@ export default function DashboardPage() {
   };
 
   const handleApproveCase = async (caseId: string) => {
+    if (approvingCaseId) return;
+    setApprovingCaseId(caseId);
     try {
       await api.approveCase(caseId);
       await loadData();
@@ -92,10 +96,14 @@ export default function DashboardPage() {
       }
     } catch (err) {
       console.error("Approval failed:", err);
+    } finally {
+      setApprovingCaseId(null);
     }
   };
 
   const handleRejectCase = async (caseId: string) => {
+    if (rejectingCaseId) return;
+    setRejectingCaseId(caseId);
     try {
       await api.rejectCase(caseId);
       await loadData();
@@ -104,6 +112,8 @@ export default function DashboardPage() {
       }
     } catch (err) {
       console.error("Rejection failed:", err);
+    } finally {
+      setRejectingCaseId(null);
     }
   };
 
@@ -215,6 +225,7 @@ export default function DashboardPage() {
               <RecoveryQueue
                 cases={cases}
                 analyzingCaseId={analyzingCaseId}
+                approvingCaseId={approvingCaseId}
                 executingCaseId={executingCaseId}
                 verifyingCaseId={verifyingCaseId}
                 onSelectCase={handleSelectCase}
@@ -240,6 +251,7 @@ export default function DashboardPage() {
               <RecoveryQueue
                 cases={cases}
                 analyzingCaseId={analyzingCaseId}
+                approvingCaseId={approvingCaseId}
                 executingCaseId={executingCaseId}
                 verifyingCaseId={verifyingCaseId}
                 onSelectCase={handleSelectCase}
@@ -262,6 +274,7 @@ export default function DashboardPage() {
               <RecoveryQueue
                 cases={cases}
                 analyzingCaseId={analyzingCaseId}
+                approvingCaseId={approvingCaseId}
                 executingCaseId={executingCaseId}
                 verifyingCaseId={verifyingCaseId}
                 onSelectCase={handleSelectCase}
@@ -276,6 +289,8 @@ export default function DashboardPage() {
           {activeTab === "approvals" && (
             <HumanApprovalQueue
               cases={cases}
+              approvingCaseId={approvingCaseId}
+              rejectingCaseId={rejectingCaseId}
               onApprove={handleApproveCase}
               onReject={handleRejectCase}
               onSelectCase={handleSelectCase}
@@ -317,6 +332,8 @@ export default function DashboardPage() {
           <CaseDetailModal
             caseData={selectedCaseDetail}
             analyzingCaseId={analyzingCaseId}
+            approvingCaseId={approvingCaseId}
+            rejectingCaseId={rejectingCaseId}
             executingCaseId={executingCaseId}
             verifyingCaseId={verifyingCaseId}
             onClose={() => setSelectedCaseDetail(null)}
