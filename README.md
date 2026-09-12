@@ -1,4 +1,4 @@
-# RazorRecover AI
+# RazorRecover AI.
 
 An AI-assisted revenue recovery system for failed Razorpay payments: it scores payment-failure risk deterministically, uses Gemini to diagnose the likely cause and recommend a recovery action, validates every recommendation against a hard-coded policy engine, routes high-risk or low-confidence cases to a human operator, and — once cleared — creates a real Razorpay Test Mode Payment Link whose success is confirmed only via a signed webhook.
 
